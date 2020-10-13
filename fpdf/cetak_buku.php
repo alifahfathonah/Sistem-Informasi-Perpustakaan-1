@@ -1,0 +1,52 @@
+<?php
+// memanggil library FPDF
+require('fpdf.php');
+// intance object dan memberikan pengaturan halaman PDF
+$pdf = new FPDF('l','mm','A4');
+// membuat halaman baru
+$pdf->AddPage();
+// setting jenis font yang akan digunakan
+$pdf->Image('at.png',18,3,38,38);
+$pdf->SetFont('Times','B',18);
+// mencetak string 
+$pdf->Cell(0,5,'LAPORAN DATA BUKU PERPUSTAKAAN','0','1','C');
+$pdf->SetFont('Times','B',16);
+$pdf->Cell(0,7,'SMA MUHAMMADIYAH PK KARTASURA','0','1','C',false);
+$pdf->SetFont('Times','i',14);
+$pdf->Cell(0,4,'Alamat :  Jl. Slamet Riyadi No.80, Dusun II, Kartasura, Sukoharjo','0','1','C',false);
+$pdf->Cell(0,7,'Kabupaten Sukoharjo, Jawa Tengah 57167','0','1','C',false);
+$pdf->Ln(8);
+$pdf->Cell(280,0.6,'','0','1','C',true);
+$pdf->Ln(5);
+
+// Memberikan space kebawah agar tidak terlalu rapat
+$pdf->Cell(10,7,'',0,1);
+
+$pdf->SetFont('Times','B',14);
+$pdf->Cell(10,6,'NO',1,0);
+$pdf->Cell(40,6,'ISBN',1,0);
+$pdf->Cell(100,6,'JUDUL BUKU',1,0);
+$pdf->Cell(60,6,'PENGARANG',1,0);
+$pdf->Cell(35,6,'PENERBIT',1,0);
+$pdf->Cell(35,6,'TGL MASUK',1,1);
+
+$pdf->SetFont('Times','',12);
+
+require "../koneksi/koneksi1.php";
+$buku = mysqli_query($koneksi, "select * from buku");
+$no = 1;
+while ($row = mysqli_fetch_array($buku)){
+	$pdf->Cell(10,6,$no,1,0);
+    $pdf->Cell(40,6,$row['kode_buku'],1,0);
+    $pdf->Cell(100,6,$row['judul'],1,0);
+    $pdf->Cell(60,6,$row['pengarang'],1,0);
+    $pdf->Cell(35,6,$row['penerbit'],1,0);
+    $pdf->Cell(35,6,$row['date'],1,1);
+    $no++; 
+}
+$pdf->SetFont('Times','B',12);
+ $pdf->Cell( 0, 40, 'Mengetahui,               ', 0, 0, 'R' );
+ $pdf->Cell( 0, 85, 'Kepala Perpustakaan', 0, 0, 'R' );
+
+$pdf->Output();
+?>
